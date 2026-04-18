@@ -54,7 +54,8 @@ Each round picks a random pattern and asks you three questions in sequence:
 | 2 | What is the correct explanation? | 3 choices (A–C) |
 | 3 | What is the correct trading action? | 3 choices (A–C) |
 
-A wrong answer at any round shows you the correct answer and ends that round — you will not be penalized twice. A correct answer advances you to the next round immediately.
+A wrong answer at any round shows you the correct answer and ends that round — you will not be penalized twice.
+A correct answer advances you to the next round immediately.
 
 **Controls**
 
