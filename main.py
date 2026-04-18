@@ -71,11 +71,11 @@ def ask_multiple_choice(header, correct, distractors, art):
 def wait_for_continue(short=None):
     if short is None:
         get_input_with_exit(
-            f"{YELLOW}Press Enter to continue: (type 'return' to go back, 'exit' to quit) {RESET}"
+            f"\n{YELLOW}Press Enter to continue: (type 'return' to go back, 'exit' to quit) {RESET}"
         )
     else:
         get_input_with_exit(
-            f"{YELLOW}\nPress Enter to continue... {RESET}"
+            f"\n{YELLOW}Press Enter to continue... {RESET}"
         )
 
 
@@ -95,15 +95,15 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
         return
     if not result:
         print(
-            f"{RED}{ITALIC}{BOLD}\nWrong!\n{RESET}"
-            f"{RED}{UNDERLINE}The correct answer is:{RESET}"
+            f"{RED}{ITALIC}{BOLD}\nWrong!\n\n{RESET}"
+            f"{RED}{UNDERLINE}The correct answer is:{RESET} "
             f"{LIGHT_RED}{NEGATIVE}{BOLD}{correct_pattern}{RESET}\n"
         )
         wait_for_continue()
         return
     print(
-        f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
-        f"The pattern is {NEGATIVE}{correct_pattern}{RESET}"
+        f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
+        f"The pattern is:\n\n{NEGATIVE}{correct_pattern}{RESET}"
     )
     wait_for_continue(1)
 
@@ -120,13 +120,13 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
     if not result:
         print(
             f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct explanation is:\n\n{RESET}"
-            f"{GREEN}{UNDERLINE}{BOLD}{NEGATIVE}\t{correct_exp}{RESET}\n"
+            f"{GREEN}{UNDERLINE}{BOLD}{NEGATIVE}{correct_exp}{RESET}\n"
         )
         wait_for_continue()
         return
     print(
-        f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
-        f"The explanation is: {NEGATIVE}{correct_exp}{RESET}"
+        f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
+        f"The explanation is:\n\n{NEGATIVE}{correct_exp}{RESET}"
     )
     wait_for_continue(1)
 
@@ -142,8 +142,8 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
         return
     if result:
         print(
-            f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
-            f"The trading action is: {NEGATIVE}{correct_action}{RESET}"
+            f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
+            f"The trading action is:\n\n{NEGATIVE}{correct_action}{RESET}"
         )
         wait_for_continue(1)
     else:
