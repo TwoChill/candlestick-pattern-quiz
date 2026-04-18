@@ -118,7 +118,7 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
                 return
             print(
                 f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
-                f"The pattern is:\n\n{NEGATIVE}{correct_pattern}{RESET}"
+                f"The pattern is: {NEGATIVE}{correct_pattern}{RESET}"
             )
             wait_for_continue(1)
             stage = 2
