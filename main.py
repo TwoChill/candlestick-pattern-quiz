@@ -54,7 +54,7 @@ def ask_multiple_choice(header, options, correct, art, allow_return=True):
     clear_screen()
     print(f"\n{PURPLE}{BOLD}{UNDERLINE}{header}{RESET}\n")
     print(f"{GREEN}{BOLD}\n" + "\n".join(art) + f"\n{RESET}")
-    print(f"{CYAN}/Options:\n{RESET}")
+    print(f"{CYAN}Options:\n{RESET}")
     for letter, opt in zip(letters, options):
         print(f"{letter}. {opt}")
 
@@ -104,8 +104,10 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
         if stage == 1:
             result = ask_multiple_choice(
                 f"{BOLD}What candlestick pattern is this?{RESET}",
-                name_options, correct_pattern, art, allow_return=False,
+                name_options, correct_pattern, art, allow_return=True,
             )
+            if result is None:
+                continue
             if not result:
                 print(
                     f"{RED}{ITALIC}{BOLD}\nWrong!\n\n{RESET}"
