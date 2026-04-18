@@ -33,7 +33,7 @@ def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def get_input_with_exit(prompt):
+def get_input_with_exit(prompt, allow_return=True):
     try:
         user_input = input(prompt).strip().lower()
     except (KeyboardInterrupt, EOFError):
@@ -42,15 +42,13 @@ def get_input_with_exit(prompt):
     if user_input == 'exit':
         print(f"{RED}{BOLD}\nExiting the quiz. Goodbye!{RESET}")
         raise SystemExit(0)
-    if user_input == 'return':
+    if allow_return and user_input == 'return':
         return None
     return user_input
 
 
-def ask_multiple_choice(header, correct, distractors, art):
-    """Render one question. Returns True/False for correct/wrong, or None if user typed 'return'."""
-    options = [correct] + list(distractors)
-    random.shuffle(options)
+def ask_multiple_choice(header, options, correct, art, allow_return=True):
+    """Render one question. options is pre-shuffled. Returns True/False/None (return)."""
     letters = LETTERS[:len(options)]
 
     clear_screen()
@@ -60,9 +58,7 @@ def ask_multiple_choice(header, correct, distractors, art):
     for letter, opt in zip(letters, options):
         print(f"{letter}. {opt}")
 
-    answer = get_input_with_exit(
-        f"\n{YELLOW}Your answer: {RESET}"
-    )
+    answer = get_input_with_exit(f"\n{YELLOW}Your answer: {RESET}", allow_return=allow_return)
     if answer is None:
         return None
     return answer.upper() == letters[options.index(correct)]
@@ -87,71 +83,87 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
     correct_pattern = random.choice(names)
     art = candlestick_patterns[correct_pattern]
 
-    distractors = random.sample([n for n in names if n != correct_pattern], 4)
-    result = ask_multiple_choice(
-        f"{BOLD}What candlestick pattern is this?{RESET}", correct_pattern, distractors, art
-    )
-    if result is None:
-        return
-    if not result:
-        print(
-            f"{RED}{ITALIC}{BOLD}\nWrong!\n\n{RESET}"
-            f"{RED}{UNDERLINE}The correct answer is:{RESET} "
-            f"{LIGHT_RED}{NEGATIVE}{BOLD}{correct_pattern}{RESET}\n"
-        )
-        wait_for_continue()
-        return
-    print(
-        f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
-        f"The pattern is:\n\n{NEGATIVE}{correct_pattern}{RESET}"
-    )
-    wait_for_continue(1)
+    # Pre-compute all options once so 'return' replays the identical question.
+    name_options = [correct_pattern] + random.sample([n for n in names if n != correct_pattern], 4)
+    random.shuffle(name_options)
 
     correct_exp = explanations[correct_pattern][0]
-    exp_distractors = random.sample(
+    exp_options = [correct_exp] + random.sample(
         [explanations[k][0] for k in explanations if k != correct_pattern], 2
     )
-    result = ask_multiple_choice(
-        f"What is the correct explanation for the {GREEN}{NEGATIVE}{UNDERLINE}{correct_pattern}{RESET}{PURPLE}{BOLD}{UNDERLINE} pattern?",
-        correct_exp, exp_distractors, art,
-    )
-    if result is None:
-        return
-    if not result:
-        print(
-            f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct explanation is:\n\n{RESET}"
-            f"{GREEN}{UNDERLINE}{BOLD}{NEGATIVE}{correct_exp}{RESET}\n"
-        )
-        wait_for_continue()
-        return
-    print(
-        f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
-        f"The explanation is:\n\n{NEGATIVE}{correct_exp}{RESET}"
-    )
-    wait_for_continue(1)
+    random.shuffle(exp_options)
 
     correct_action = trading_actions[correct_pattern]
-    action_distractors = random.sample(
+    action_options = [correct_action] + random.sample(
         [v for k, v in trading_actions.items() if k != correct_pattern], 2
     )
-    result = ask_multiple_choice(
-        f"What is the correct trading action for the {GREEN}{NEGATIVE}{UNDERLINE}{correct_pattern}{RESET}{PURPLE}{BOLD}{UNDERLINE} pattern?",
-        correct_action, action_distractors, art,
-    )
-    if result is None:
-        return
-    if result:
-        print(
-            f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
-            f"The trading action is:\n\n{NEGATIVE}{correct_action}{RESET}"
-        )
-        wait_for_continue(1)
-    else:
-        print(
-            f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct trading action is: {RESET}"
-            f"{GREEN}{UNDERLINE}{BOLD}{correct_action}{RESET}\n"
-        )
-        wait_for_continue()
+    random.shuffle(action_options)
+
+    stage = 1
+    while True:
+        if stage == 1:
+            result = ask_multiple_choice(
+                f"{BOLD}What candlestick pattern is this?{RESET}",
+                name_options, correct_pattern, art, allow_return=False,
+            )
+            if not result:
+                print(
+                    f"{RED}{ITALIC}{BOLD}\nWrong!\n\n{RESET}"
+                    f"{RED}{UNDERLINE}The correct answer is:{RESET} "
+                    f"{LIGHT_RED}{NEGATIVE}{BOLD}{correct_pattern}{RESET}\n"
+                )
+                wait_for_continue()
+                return
+            print(
+                f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
+                f"The pattern is:\n\n{NEGATIVE}{correct_pattern}{RESET}"
+            )
+            wait_for_continue(1)
+            stage = 2
+
+        elif stage == 2:
+            result = ask_multiple_choice(
+                f"What is the correct explanation for the {GREEN}{NEGATIVE}{UNDERLINE}{correct_pattern}{RESET}{PURPLE}{BOLD}{UNDERLINE} pattern?",
+                exp_options, correct_exp, art, allow_return=True,
+            )
+            if result is None:
+                stage = 1
+                continue
+            if not result:
+                print(
+                    f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct explanation is:\n\n{RESET}"
+                    f"{GREEN}{UNDERLINE}{BOLD}{NEGATIVE}{correct_exp}{RESET}\n"
+                )
+                wait_for_continue()
+                return
+            print(
+                f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
+                f"The explanation is:\n\n{NEGATIVE}{correct_exp}{RESET}"
+            )
+            wait_for_continue(1)
+            stage = 3
+
+        elif stage == 3:
+            result = ask_multiple_choice(
+                f"What is the correct trading action for the {GREEN}{NEGATIVE}{UNDERLINE}{correct_pattern}{RESET}{PURPLE}{BOLD}{UNDERLINE} pattern?",
+                action_options, correct_action, art, allow_return=True,
+            )
+            if result is None:
+                stage = 2
+                continue
+            if result:
+                print(
+                    f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
+                    f"The trading action is:\n\n{NEGATIVE}{correct_action}{RESET}"
+                )
+                wait_for_continue(1)
+            else:
+                print(
+                    f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct trading action is: {RESET}"
+                    f"{GREEN}{UNDERLINE}{BOLD}{correct_action}{RESET}\n"
+                )
+                wait_for_continue()
+            return
 
 
 def main():
