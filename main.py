@@ -124,7 +124,10 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
         )
         wait_for_continue()
         return
-    print(f"{GREEN}{BOLD}\nCorrect! The explanation is: {correct_exp}\n{RESET}")
+    print(
+        f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
+        f"The explanation is: {NEGATIVE}{correct_exp}{RESET}"
+    )
     wait_for_continue(1)
 
     correct_action = trading_actions[correct_pattern]
@@ -138,13 +141,17 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
     if result is None:
         return
     if result:
-        print(f"{GREEN}{BOLD}\nCorrect! The trading action is: {correct_action}\n{RESET}")
+        print(
+            f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
+            f"The trading action is: {NEGATIVE}{correct_action}{RESET}"
+        )
+        wait_for_continue(1)
     else:
         print(
             f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct trading action is: {RESET}"
             f"{GREEN}{UNDERLINE}{BOLD}{correct_action}{RESET}\n"
         )
-    wait_for_continue()
+        wait_for_continue()
 
 
 def main():
