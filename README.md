@@ -36,13 +36,9 @@ Bullish Engulfing, Bearish Engulfing
 ## Installation
 
 ```bash
-git clone https://github.com/TwoChill/candlestick-pattern-quiz.git
-cd candlestick-pattern-quiz
-pip install colorama
+pip install -r requirements.txt
 python main.py
 ```
-
----
 
 ## How the quiz works
 
