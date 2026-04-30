@@ -20,6 +20,7 @@ ITALIC = "\033[3m"
 UNDERLINE = "\033[4m"
 NEGATIVE = "\033[7m"
 RESET = "\033[0m"
+DIM = "\033[2m"
 
 from single_patterns import patterns as single_patterns
 from double_patterns import patterns as double_patterns
@@ -31,6 +32,17 @@ LETTERS = ['A', 'B', 'C', 'D', 'E']
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def stage_indicator(current_stage):
+    stages = ["1· Name", "2· Explain", "3· Trade"]
+    parts = []
+    for i, label in enumerate(stages, start=1):
+        if i == current_stage:
+            parts.append(f"{GREEN}{BOLD}[ {label} ]{RESET}")
+        else:
+            parts.append(f"{DIM}[ {label} ]{RESET}")
+    print("  " + f"  {DIM}›{RESET}  ".join(parts) + "\n")
 
 
 def get_input_with_exit(prompt, allow_return=True):
@@ -47,11 +59,13 @@ def get_input_with_exit(prompt, allow_return=True):
     return user_input
 
 
-def ask_multiple_choice(header, options, correct, art, allow_return=True):
+def ask_multiple_choice(header, options, correct, art, allow_return=True, stage=None):
     """Render one question. options is pre-shuffled. Returns True/False/None (return)."""
     letters = LETTERS[:len(options)]
 
     clear_screen()
+    if stage is not None:
+        stage_indicator(stage)
     print(f"\n{PURPLE}{BOLD}{UNDERLINE}{header}{RESET}\n")
     print(f"{GREEN}{BOLD}\n" + "\n".join(art) + f"\n{RESET}")
     print(f"{CYAN}Options:\n{RESET}")
@@ -104,7 +118,7 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
         if stage == 1:
             result = ask_multiple_choice(
                 f"{BOLD}What candlestick pattern is this?{RESET}",
-                name_options, correct_pattern, art, allow_return=True,
+                name_options, correct_pattern, art, allow_return=True, stage=1,
             )
             if result is None:
                 continue
@@ -126,7 +140,7 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
         elif stage == 2:
             result = ask_multiple_choice(
                 f"What is the correct explanation for the {GREEN}{NEGATIVE}{UNDERLINE}{correct_pattern}{RESET}{PURPLE}{BOLD}{UNDERLINE} pattern?",
-                exp_options, correct_exp, art, allow_return=True,
+                exp_options, correct_exp, art, allow_return=True, stage=2,
             )
             if result is None:
                 stage = 1
@@ -148,7 +162,7 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
         elif stage == 3:
             result = ask_multiple_choice(
                 f"What is the correct trading action for the {GREEN}{NEGATIVE}{UNDERLINE}{correct_pattern}{RESET}{PURPLE}{BOLD}{UNDERLINE} pattern?",
-                action_options, correct_action, art, allow_return=True,
+                action_options, correct_action, art, allow_return=True, stage=3,
             )
             if result is None:
                 stage = 2
