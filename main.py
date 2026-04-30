@@ -124,14 +124,14 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
                 continue
             if not result:
                 print(
-                    f"{RED}{ITALIC}{BOLD}\nWrong!\n\n{RESET}"
+                    f"{RED}{ITALIC}{BOLD}\nWrong!\n{RESET}"
                     f"{RED}{UNDERLINE}The correct answer is:{RESET} "
                     f"{LIGHT_RED}{NEGATIVE}{BOLD}{correct_pattern}{RESET}\n"
                 )
                 wait_for_continue()
                 return
             print(
-                f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
+                f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
                 f"The pattern is: {NEGATIVE}{correct_pattern}{RESET}"
             )
             wait_for_continue(1)
@@ -147,14 +147,14 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
                 continue
             if not result:
                 print(
-                    f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct explanation is:\n\n{RESET}"
+                    f"{RED}{ITALIC}{BOLD}\nWrong!\nThe correct explanation is:\n{RESET}"
                     f"{GREEN}{UNDERLINE}{BOLD}{NEGATIVE}{correct_exp}{RESET}\n"
                 )
                 wait_for_continue()
                 return
             print(
-                f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
-                f"The explanation is:\n\n{NEGATIVE}{correct_exp}{RESET}"
+                f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
+                f"The explanation is:\n{NEGATIVE}{correct_exp}{RESET}"
             )
             wait_for_continue(1)
             stage = 3
@@ -169,14 +169,14 @@ def pattern_name_quiz(candlestick_patterns, explanations, trading_actions):
                 continue
             if result:
                 print(
-                    f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n\n"
-                    f"The trading action is:\n\n{NEGATIVE}{correct_action}{RESET}"
+                    f"{GREEN}{ITALIC}{BOLD}\nCorrect!{RESET}{GREEN}\n"
+                    f"The trading action is:\n{NEGATIVE}{correct_action}{RESET}"
                 )
                 wait_for_continue(1)
             else:
                 print(
-                    f"{RED}{ITALIC}{BOLD}\nWrong!\n\nThe correct trading action is: {RESET}"
-                    f"{GREEN}{UNDERLINE}{BOLD}{correct_action}{RESET}\n"
+                    f"{RED}{ITALIC}{BOLD}\nWrong!\nThe correct trading action is:\n{RESET}"
+                    f"{GREEN}{UNDERLINE}{BOLD}{NEGATIVE}{correct_action}{RESET}\n"
                 )
                 wait_for_continue()
             return
